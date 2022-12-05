@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+<head th:replace="fragment :: head">
+    <title>레시피 북</title>
+</head>
+<body>
+<header th:replace="/fragment :: header"></header>
+<main class="d-flex flex-column justify-content-center w-100 container mt-1">
+    <div class="d-flex justify-content-between w-100 mt-1 mb-3">
+        <h2>레시피 작성하기</h2>
+    </div>
+    <form id="delete-form" th:action="@{/templates/memo/{id}/delete(id=${id}, page=${page}, size=${size})}" method="post"></form>
+    <form class="w-100 my-3" th:action="@{/templates/memo/{id}/update(id=${id}, page=${page}, size=${size})}" th:object="${form}" method="post">
+        <div class="mb-3">
+            <label class="form-label" for="content-input">본문</label>
+            <textarea class="margin-top-20" id="content-input" th:field="*{content}"></textarea>
+            <div class="invalid-feedback d-block">
+                <th:block th:if="${#fields.hasErrors('content')}" th:errors="*{content}">본문 오류</th:block>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <input class="btn btn-primary mx-1" type="submit" value="저장">
+            <a class="btn btn-secondary mx-1" th:href="@{/templates/memo(page=${page}, size=${size})}">목록</a>
+            <input class="btn btn-danger mx-1" type="button" value="삭제" onclick="del()">
+        </div>
+    </form>
+</main>
+<script>
+    function del() {
+        document.getElementById("delete-form").submit();
+    }
+
+    $(function() {
+        $('#content-input').summernote({
+            height: 500,
+            minHeight: 400,
+            maxHeight: null,
+            focus: true,
+            lang: "ko-KR",
+            placeholder: '최대 2048자까지 쓸 수 있습니다',
+            callbacks : {
+                onImageUpload : function(files, ignoredEditor, ignoredWelEditable) {
+                    for (let i = 0; i < files.length; i++) {
+                        uploadImage(files[i], this);
+                    }
+                }
+            }
+        });
+    })
+
+    function uploadImage(file, editor) {
+        const data = new FormData();
+
+        data.append("file", file);
+
+        $.ajax({
+            url : "/image/upload",
+            data : data,
+            method: "POST",
+            enctype : 'multipart/form-data',
+            processData : false,
+            contentType : false,
+        }).done(function(response) {
+            $(editor).summernote('editor.insertImage', response);
+        })
+    }
+
+    function deleteThumbnailImage(e) {
+        $(e).parent().remove();
+    }
+
+    function uploadThumbnailImage(e) {
+        if (e.files[0] == null) {
+            $("#thumbnail-upload-input").val("");
+        } else {
+            const data = new FormData();
+
+            let csrfToken = document.querySelector('meta[name="_csrf"]').content;
+            let csrfParameter =  document.querySelector('meta[name="_csrf_parameterName"]').content;
+
+            data.append("file", e.files[0]);
+            data.append(csrfParameter, csrfToken);
+
+            $.ajax({
+                url : "/image/upload",
+                data : data,
+                method: "POST",
+                enctype : 'multipart/form-data',
+                processData : false,
+                contentType : false,
+            }).done(function(response) {
+                const thumbnailList = $("#thumbnail-list");
+                thumbnailList.append(
+                    "<div id=\"" + response + "\" class=\"d-flex flex-row mb-1\">" +
+                    "<input class=\"form-control\" type=\"text\" name=\"thumbnails\" value=\"" + response + "\" readonly>" +
+                    "<button class=\"btn btn-danger ml-2\" onclick=\"deleteThumbnailImage(this)\">삭제</button>" +
+                    "</div>"
+                );
+
+                $("#thumbnail-upload-input").val("");
+            })
+        }
+    }
+</script>
+</body>
+</html>

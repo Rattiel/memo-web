@@ -1,0 +1,51 @@
+image:
+  upload:
+    save: image/upload
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+
+  servlet:
+    encoding:
+      force-response: true
+
+  port: 8080
+
+spring:
+  profiles:
+    active: init
+
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 10MB
+
+  thymeleaf:
+    cache: false
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:./test
+    username: test
+    password: 1234
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: off
+
+logging:
+ level:
+   root: info
+   org.hibernate.SQL: debug

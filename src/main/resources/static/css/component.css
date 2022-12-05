@@ -1,0 +1,54 @@
+.divider {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.35);
+  font-size: 12px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.divider::before, .divider::after {
+  content: " ";
+  flex-grow: 1;
+  background: rgba(0, 0, 0, 0.35);
+  height: 1px;
+  font-size: 0px;
+  line-height: 0px;
+  margin: 0px 16px;
+}
+
+.link {
+  border: none;
+  background-color: transparent;
+}
+
+.post {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.post .header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.post .header .top .title {
+  font-size: 30px;
+  font-weight: bold;
+}
+.post .header .bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.post .header .bottom .left {
+  display: flex;
+}
+.post .header .bottom .right {
+  display: flex;
+}
+.post .content {
+  min-height: 300px;
+}
+
+/*# sourceMappingURL=component.css.map */

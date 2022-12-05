@@ -1,0 +1,34 @@
+:root {
+  --font-family: "Noto Sans KR", sans-serif;
+  --nav-bar-z-index: 100;
+}
+
+ul,
+ol,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration-line: none;
+  text-decoration: none;
+  color: black;
+}
+
+a:visited,
+a:focus,
+a:hover,
+a:hover,
+a:active {
+  text-decoration: none;
+}
+
+body {
+  /*-webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;*/
+  word-break: keep-all;
+}
+
+/*# sourceMappingURL=base.css.map */
