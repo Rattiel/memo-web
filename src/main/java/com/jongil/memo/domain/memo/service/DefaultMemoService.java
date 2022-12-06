@@ -2,12 +2,9 @@ package com.jongil.memo.domain.memo.service;
 
 import com.jongil.memo.domain.memo.Memo;
 import com.jongil.memo.domain.memo.dto.MemoData;
-import com.jongil.memo.domain.memo.dto.MemoPreview;
 import com.jongil.memo.domain.memo.exception.MemoNotFoundException;
 import com.jongil.memo.domain.memo.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -39,12 +36,6 @@ public class DefaultMemoService implements MemoService {
         Memo post = find(id);
 
         postRepository.delete(post);
-    }
-
-    @Transactional
-    @Override
-    public Page<MemoPreview> list(Pageable pageable) {
-        return postRepository.findAllPreviewBy(pageable);
     }
 
     @Transactional

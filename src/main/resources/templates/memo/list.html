@@ -1,37 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="kr">
 <head th:replace="fragment :: head">
-    <title>레시피 북</title>
+    <title>메모</title>
 </head>
 <body>
 <header th:replace="fragment :: header"></header>
 <main class="d-flex flex-column justify-content-center w-100 container mt-1">
     <div class="d-flex flex-row-reverse mb-3" sec:authorize="isAuthenticated()">
-        <a class="btn btn-primary ms-2" th:href="@{/templates/memo/new/create(page=${page}, size=${size})}">레시피 작성하기</a>
+        <a class="btn btn-primary ms-2" th:href="@{/memo/new/create}">메모 작성하기</a>
     </div>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">번호</th>
-            <th scope="col">제목</th>
-            <th scope="col">등록일</th>
-            <th scope="col">조회수</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="post : ${postPreviewPage}" th:attr="data-href=@{/templates/memo/{id}(id=${post.id}, page=${page}, size=${size})}">
-            <th scope="row" th:text="${post.id}"></th>
-            <td th:text="${post.title}"></td>
-            <th:block th:if="${post.createDate.isAfter(yesterday)}">
-                <th th:text="${#temporals.format(post.createDate, 'HH:mm')}">작성일</th>
-            </th:block>
-            <th:block th:unless="${post.createDate.isAfter(yesterday)}">
-                <th th:text="${#temporals.format(post.createDate, 'dd-MM')}">작성일</th>
-            </th:block>
-            <td th:text="${post.views}">조회수</td>
-            <td th:text="${post.owner.nickname}">작성자</td>
-        </tr>
-    </table>
 </main>
 <script>
     $(document).ready(function(){

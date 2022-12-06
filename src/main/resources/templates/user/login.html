@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="kr">
 <head th:replace="fragment :: head">
-    <title>레시피 북</title>
+    <title>메모</title>
 </head>
 <body>
 <header th:replace="/fragment :: header"></header>
@@ -20,9 +20,6 @@
             </div>
         </div>
         <input class="btn btn-primary w-100" type="submit" value="로그인">
-        <div class="text-center mt-2">
-            <a class="link" href="#">아이디 또는 비밀번호 찾기</a>
-        </div>
         <div class="divider mt-2">또는</div>
         <div class="text-center mt-2">
             <a class="btn btn-primary w-100" th:href="@{/register}" href="#">회원 가입</a>

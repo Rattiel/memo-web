@@ -41,12 +41,6 @@ public class Memo implements Ownable {
     @JoinColumn(updatable = false, nullable = false)
     private String owner;
 
-    @Formula("(SELECT p.id FROM Post p WHERE p.id > id ORDER BY p.id asc LIMIT 1)")
-    private Long after;
-
-    @Formula("(SELECT p.id FROM Post p WHERE p.id < id ORDER BY p.id desc LIMIT 1)")
-    private Long before;
-
     public boolean isModified() {
         return createDate != modifiedDate;
     }

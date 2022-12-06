@@ -4,11 +4,9 @@ import com.jongil.memo.domain.common.exception.Fieldable;
 import com.jongil.memo.domain.memo.Memo;
 import com.jongil.memo.domain.memo.dto.MemoData;
 import com.jongil.memo.domain.memo.dto.MemoForm;
-import com.jongil.memo.domain.memo.dto.MemoPreview;
 import com.jongil.memo.domain.memo.exception.MemoNotFoundException;
 import com.jongil.memo.domain.memo.service.MemoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -23,11 +21,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @RequiredArgsConstructor
-@RequestMapping("/post")
+@RequestMapping("/memo")
 @Controller
 public class MemoController {
-    private final static int MAX_NAV_ITEM = 5;
-
     private final MemoService memoService;
 
     @ExceptionHandler({MemoNotFoundException.class})
@@ -41,13 +37,9 @@ public class MemoController {
         model.addAttribute("yesterday", yesterday);
     }
 
-    @ModelAttribute
-    public void bindPageable(
-            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-            Model model
-    ) {
-        model.addAttribute("page", pageable.getPageNumber());
-        model.addAttribute("size", pageable.getPageSize());
+    @GetMapping()
+    public String renderListView() {
+        return "memo/list";
     }
 
     @GetMapping("/new/create")
@@ -60,8 +52,7 @@ public class MemoController {
     @PostMapping("/new/create")
     public String requestCreate(
             @Validated @ModelAttribute("form") MemoForm form,
-            BindingResult bindingResult,
-            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             return "memo/create";
@@ -71,12 +62,7 @@ public class MemoController {
                 form.getContent()
         );
 
-        return String.format(
-                "redirect:/post/%d?page=%d&size=%d",
-                post.getId(),
-                pageable.getPageNumber(),
-                pageable.getPageSize()
-        );
+        return "redirect:/memo";
     }
 
     @GetMapping("/{id}/update")
@@ -106,38 +92,16 @@ public class MemoController {
                 form.getContent()
         );
 
-        return String.format(
-                "redirect:/post/%d?page=%d&size=%d",
-                post.getId(),
-                pageable.getPageNumber(),
-                pageable.getPageSize()
-        );
+        return "redirect:/memo";
     }
 
     @PostMapping("/{id}/delete")
     public String requestDelete(
-            @PathVariable Long id,
-            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @PathVariable Long id
     ) {
         memoService.delete(id);
 
-        return String.format(
-                "redirect:/post?page=%d&size=%d",
-                pageable.getPageNumber(),
-                pageable.getPageSize()
-        );
-    }
-
-    @GetMapping
-    public String renderList(
-            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-            Model model
-    ) {
-        Page<MemoPreview> postPreviewPage = memoService.list(pageable);
-        bindPostPreviewPage(postPreviewPage, model);
-        bindPageNavBar(postPreviewPage, model);
-
-        return "memo/list";
+        return "redirect:/memo";
     }
 
     @GetMapping("/{id}")
@@ -159,25 +123,6 @@ public class MemoController {
     private void bindUpdateForm(MemoData data, Model model) {
         MemoForm form = MemoForm.from(data);
         model.addAttribute("form", form);
-    }
-
-    private void bindPostPreviewPage(Page<MemoPreview> postPreviewPage, Model model) {
-        model.addAttribute("postPreviewPage", postPreviewPage);
-    }
-
-    private void bindPageNavBar(Page<?> Page, Model model) {
-        int navStartPage = Page.getNumber() - Page.getNumber() % MAX_NAV_ITEM;
-        model.addAttribute("start", navStartPage);
-
-        int navLastPage = Math.min(navStartPage + MAX_NAV_ITEM - 1, Page.getTotalPages() - 1);
-        navLastPage = Math.max(navLastPage, 0);
-        model.addAttribute("last", navLastPage);
-
-        boolean showBeforeNav = navStartPage >= MAX_NAV_ITEM;
-        model.addAttribute("showBeforeNav", showBeforeNav);
-
-        boolean showNextNav = navLastPage < Page.getTotalPages() - 1;
-        model.addAttribute("showNextNav", showNextNav);
     }
 
     private void bindPostView(Memo post, Model model) {

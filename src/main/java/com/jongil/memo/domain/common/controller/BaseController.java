@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class BaseController {
     @GetMapping("/")
     public String redirectIndex() {
-        return "redirect:/post";
+        return "redirect:/memo";
     }
 }

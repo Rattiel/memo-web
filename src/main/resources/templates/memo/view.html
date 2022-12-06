@@ -1,23 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="kr">
 <head th:replace="fragment :: head">
-    <title>레시피 북</title>
+    <title>메모</title>
 </head>
 <body>
-<header th:replace="/fragment :: header"></header>
+<header th:replace="fragment :: header"></header>
 <main class="d-flex flex-column justify-content-center w-100 container mt-1">
     <div class="d-flex flex-row-reverse mb-3">
         <div class="d-flex flex-row">
-            <a class="btn btn-secondary mx-2" th:if="${post.after != null}" th:href="@{/templates/memo/{id}(id=${post.after}, page=${page}, size=${size})}">다음글</a>
-            <a class="btn btn-secondary mx-2" th:if="${post.before != null}" th:href="@{/templates/memo/{id}(id=${post.before}, page=${page}, size=${size})}">이전글</a>
-            <a class="btn btn-primary ms-2" th:href="@{/templates/memo(page=${page}, size=${size})}">목록</a>
+            <a class="btn btn-primary ms-2" th:href="@{/memo(page=${page}, size=${size})}">목록</a>
         </div>
     </div>
     <table th:object="${post}" border="1">
-        <tr><td>제목</td><td th:text="*{title}"></td></tr>
         <tr><td>본문</td><td th:utext="*{content}"></td></tr>
-        <tr><td>본문</td><td th:utext="*{views}"></td></tr>
-        <tr><td>작성자</td><td th:utext="*{owner.nickname}"></td></tr>
         <tr>
             <td>작성일</td>
             <th:block th:if="#{*{createDate}.isAfter(${yesterday})}">
@@ -28,8 +23,8 @@
             </th:block>
         </tr>
         <tr><td></td><td>
-            <a class="btn btn-primary ms-2" th:href="@{/templates/memo(page=${page}, size=${size})}">목록으로</a>
-            <a class="btn btn-primary ms-2" th:href="@{/templates/memo/{id}/update(id=${id}, page=${page}, size=${size})}">수정하기</a>
+            <a class="btn btn-primary ms-2" th:href="@{/memo}">목록으로</a>
+            <a class="btn btn-primary ms-2" th:href="@{/memo/{id}/update(id=${id})}">수정하기</a>
         </td></tr>
     </table>
 </main>
