@@ -1,5 +1,3 @@
-# memo-web
-
 ## 정보
 | | | 
 | - | - |
@@ -10,10 +8,16 @@
 | 프로젝트 기간 | 2022.11.20. ~ 2022.12.11. (21일간) |
 | 실행 환경 | Docker |
 
+<br>
+<br>
+
 ## 빌드 방법(윈도우 환경)
-> ./mvnw.cmd clean package -DskipTests
+> ./mvnw.cmd clean package -DskipTests <br>
 > docker-compose up --build -d
 
+<br>
+<br>
+
 ## 빌드 방법(우분투 환경)
-> ./mvnw clean package -DskipTests
-> docker-compose up --build -d
+> ./mvnw clean package -DskipTests <br>
+> docker-compose up --build -d 
