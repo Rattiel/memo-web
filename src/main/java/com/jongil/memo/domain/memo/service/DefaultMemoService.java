@@ -1,58 +1,85 @@
 package com.jongil.memo.domain.memo.service;
 
+import com.jongil.memo.domain.analysis.service.AnalysisService;
 import com.jongil.memo.domain.memo.Memo;
 import com.jongil.memo.domain.memo.dto.MemoData;
+import com.jongil.memo.domain.memo.dto.MemoId;
+import com.jongil.memo.domain.memo.dto.MemoView;
 import com.jongil.memo.domain.memo.exception.MemoNotFoundException;
 import com.jongil.memo.domain.memo.repository.MemoRepository;
+import com.jongil.memo.domain.user.User;
+import com.jongil.memo.global.config.security.SecurityUtil;
+import com.jongil.memo.global.config.websocket.SecuredStompSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.List;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class DefaultMemoService implements MemoService {
-    private final MemoRepository postRepository;
+    private final MemoRepository memoRepository;
 
-    @Transactional
+    private final SecurityUtil securityUtil;
+
+    private final SecuredStompSender websocket;
+
+    private final AnalysisService analysisService;
+
+    private final String MESSAGE_PREFIX = "/memo";
+
     @Override
-    public Memo create(String content) {
-        Memo post = Memo.create(content);
+    public void create(String title, String content) {
+        User writer = securityUtil.getUser();
 
-        return postRepository.save(post);
+        Memo memo = Memo.create(title, writer, content);
+
+        memoRepository.save(memo);
+
+        analysisService.analyze(memo.getContent());
+
+        websocket.send(MESSAGE_PREFIX + "/create", memo);
     }
 
-    @Transactional
     @Override
-    public Memo update(long id, String content) {
-        Memo post = find(id);
+    public void update(long id, String title, String content) {
+        Memo memo = find(id);
 
-        return post.update(content);
+        memo.update(title, content);
+
+        analysisService.analyze(memo.getContent());
+
+        websocket.send(MESSAGE_PREFIX + "/update", memo);
     }
 
-    @Transactional
     @Override
     public void delete(long id) {
-        Memo post = find(id);
+        Memo memo = find(id);
 
-        postRepository.delete(post);
+        memoRepository.delete(memo);
+
+        websocket.send(MESSAGE_PREFIX + "/delete", new MemoId(id, memo.getPrincipalName()));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public MemoData findDataById(long id) {
-        return postRepository.findDataById(id)
+        return memoRepository.findDataById(id)
                 .orElseThrow(MemoNotFoundException::new);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public Memo findById(long id) {
-        return find(id);
+    public List<MemoView> findAll() {
+        User writer = securityUtil.getUser();
+
+        return memoRepository.findAllByWriter(writer);
     }
 
     private Memo find(long id) {
-        return postRepository.findById(id)
+        return memoRepository.findById(id)
                 .orElseThrow(MemoNotFoundException::new);
     }
 }

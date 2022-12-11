@@ -8,6 +8,13 @@
 <main class="d-flex flex-column justify-content-center w-100 container mt-1">
     <form class="w-100 my-3" th:action="@{/memo/new/create}" th:object="${form}" method="post">
         <div class="mb-3">
+            <label class="form-label" for="title-input">제목</label>
+            <input class="form-control" type="text" id="title-input" th:field="*{title}">
+            <div class="invalid-feedback d-block">
+                <th:block th:if="${#fields.hasErrors('title')}" th:errors="*{title}">제목 오류</th:block>
+            </div>
+        </div>
+        <div class="mb-3">
             <label class="form-label" for="content-input"></label>
             <textarea class="margin-top-20" id="content-input" th:field="*{content}"></textarea>
             <div class="invalid-feedback d-block">
@@ -28,9 +35,10 @@
             maxHeight: null,
             focus: true,
             lang: "ko-KR",
-            placeholder: '최대 2048자까지 쓸 수 있습니다',
+            placeholder: '메모를 입력해주세요.',
             callbacks : {
                 onImageUpload : function(files, ignoredEditor, ignoredWelEditable) {
+                    //alert("이미지 업로드를 사용할 수 없습니다.");
                     for (let i = 0; i < files.length; i++) {
                         uploadImage(files[i], this);
                     }
@@ -42,7 +50,11 @@
     function uploadImage(file, editor) {
         const data = new FormData();
 
+        let csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        let csrfParameter =  document.querySelector('meta[name="_csrf_parameterName"]').content;
+
         data.append("file", file);
+        data.append(csrfParameter, csrfToken);
 
         $.ajax({
             url : "/image/upload",

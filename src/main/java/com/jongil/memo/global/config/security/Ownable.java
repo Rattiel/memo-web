@@ -1,7 +1,8 @@
 package com.jongil.memo.global.config.security;
 
-import com.jongil.memo.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public interface Ownable {
-    String getOwner();
+    @JsonIgnore
+    String getPrincipalName();
 }

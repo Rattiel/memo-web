@@ -9,14 +9,8 @@
     <div class="d-flex flex-row-reverse mb-3" sec:authorize="isAuthenticated()">
         <a class="btn btn-primary ms-2" th:href="@{/memo/new/create}">메모 작성하기</a>
     </div>
+    <div id="root"></div>
 </main>
-<script>
-    $(document).ready(function(){
-        $('table tbody tr').click(function(){
-            window.location = $(this).data('href');
-            return false;
-        });
-    });
-</script>
+<script src="/js/bundle.js"></script>
 </body>
 </html>

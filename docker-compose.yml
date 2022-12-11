@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - web-server
+
+  db:
+    image: mariadb
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_HOST=localhost
+      - MYSQL_PORT=3306
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=web
+      - TZ=Asia/Seoul
+    volumes:
+      - ./service/mariadb/data:/var/lib/mysql
+      - ./service/mariadb/config:/etc/mysql/conf.d
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  web-server:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/web
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+    volumes:
+      - ./service/server/img:/image/upload

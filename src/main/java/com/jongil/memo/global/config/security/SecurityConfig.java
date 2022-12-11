@@ -3,6 +3,7 @@ package com.jongil.memo.global.config.security;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +14,11 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 @Slf4j
 @RequiredArgsConstructor
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+		prePostEnabled = true,
+		securedEnabled = true,
+		jsr250Enabled = true
+)
 public class SecurityConfig {
 	private final LoginSuccessHandler loginSuccessHandler;
 
@@ -26,14 +32,16 @@ public class SecurityConfig {
 		return http
 				.authorizeRequests(authorizeRequests ->
 						authorizeRequests
-								.mvcMatchers("/css/**", "/js/**", "/library/**").permitAll()
-								.mvcMatchers("/fragment").hasRole(UserRole.DEVELOPER.toString())
-								.mvcMatchers("/h2-console/**").hasRole(UserRole.DEVELOPER.toString())
+								.mvcMatchers("/css/**", "/js/**", "/library/**", "/favicon.ico").permitAll()
+								.mvcMatchers("/fragment").hasAnyRole(UserRole.DEVELOPER.toString(), UserRole.ADMIN.toString())
+								.mvcMatchers("/h2-console/**").hasAnyRole(UserRole.DEVELOPER.toString(), UserRole.ADMIN.toString())
 								.mvcMatchers("/image/upload/*/*/*/*").permitAll()
 								.mvcMatchers("/image/upload").authenticated()
 								.mvcMatchers("/login", "/register", "/logout").permitAll()
-								.mvcMatchers("/post/new/create", "/post/*/update", "/post/*/remove").authenticated()
-								.anyRequest().authenticated()
+								.mvcMatchers("/memo/new/create", "/memo/*/update", "/memo/*/delete", "/memo/list").authenticated()
+								.mvcMatchers("/", "/memo").authenticated()
+								.mvcMatchers("/socket/**").authenticated()
+								.anyRequest().denyAll()
 				).formLogin(formLogin ->
 						formLogin
 								.loginPage("/login")

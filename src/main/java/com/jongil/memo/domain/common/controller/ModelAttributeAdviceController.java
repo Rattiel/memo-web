@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
                 BaseController.class,
                 UserController.class,
                 MemoController.class,
-                ExceptionAdviceController.class
+              //  ExceptionAdviceController.class
         }
 )
 @Controller

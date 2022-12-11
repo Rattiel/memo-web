@@ -7,7 +7,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
 
-    <title>레시피 북</title>
+    <title>메모</title>
 
     <script th:src="@{/library/jquery/3.5.1/jquery.min.js}"></script>
 
@@ -37,17 +37,6 @@
             <div class="btn-group" sec:authorize="isAuthenticated()">
                 <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" th:text="${user.nickname} + | 님|">사용자 이름</button>
                 <div class="dropdown-menu dropdown-menu-left dropdown-menu-md-right p-2 text-muted text-left">
-                    <th:block sec:authorize="hasRole('DEVELOPER') || hasRole('ADMIN')">
-                        <p>개발자 메뉴</p>
-                        <a class="dropdown-item" th:href="@{/h2-console}">db 콘솔</a>
-                        <hr class="dropdown-divider">
-                    </th:block>
-                    <th:block sec:authorize="hasRole('ADMIN')">
-                        <p>관리자 메뉴</p>
-                        <hr class="dropdown-divider">
-                        <p>사용자 메뉴</p>
-                    </th:block>
-                    <a class="dropdown-item" th:href="@{/profile}">내 프로필</a>
                     <hr class="dropdown-divider">
                     <form class="dropdown-item" action="/logout" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

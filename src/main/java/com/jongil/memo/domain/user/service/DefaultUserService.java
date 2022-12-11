@@ -2,7 +2,7 @@ package com.jongil.memo.domain.user.service;
 
 import com.jongil.memo.domain.common.exception.FieldException;
 import com.jongil.memo.domain.user.User;
-import com.jongil.memo.domain.user.dto.UserPrinciple;
+import com.jongil.memo.domain.user.dto.UserPrincipal;
 import com.jongil.memo.domain.user.dto.UserRegisterParameter;
 import com.jongil.memo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class DefaultUserService implements UserService {
                 () -> new UsernameNotFoundException(username)
         );
 
-        return UserPrinciple.from(user);
+        return UserPrincipal.from(user);
     }
 
     @Transactional

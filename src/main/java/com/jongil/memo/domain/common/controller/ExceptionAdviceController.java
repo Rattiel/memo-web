@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/*
 @Slf4j
 @ControllerAdvice(
         assignableTypes = {
@@ -37,3 +38,5 @@ public class ExceptionAdviceController {
         return "error/503";
     }
 }
+
+ */

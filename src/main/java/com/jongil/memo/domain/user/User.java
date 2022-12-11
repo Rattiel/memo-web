@@ -1,6 +1,7 @@
 package com.jongil.memo.domain.user;
 
-import com.jongil.memo.domain.user.dto.UserPrinciple;
+import com.jongil.memo.domain.user.dto.UserInfo;
+import com.jongil.memo.domain.user.dto.UserPrincipal;
 import com.jongil.memo.domain.user.dto.UserRegisterParameter;
 import com.jongil.memo.global.config.security.UserRole;
 import lombok.*;
@@ -14,8 +15,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "UserData")
-public class User {
+@Table(name="USER_DATA")
+public class User implements UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true, updatable = false)
@@ -47,7 +48,7 @@ public class User {
                 .build();
     }
 
-    public static User from(UserPrinciple principle) {
+    public static User from(UserPrincipal principle) {
         return User.builder()
                 .id(principle.getId())
                 .username(principle.getUsername())

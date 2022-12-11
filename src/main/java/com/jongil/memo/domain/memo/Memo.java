@@ -1,5 +1,6 @@
 package com.jongil.memo.domain.memo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jongil.memo.domain.user.User;
 import com.jongil.memo.global.config.security.Ownable;
 import lombok.*;
@@ -25,6 +26,9 @@ public class Memo implements Ownable {
     @Column(updatable = false, unique = true)
     private Long id;
 
+    @Column(nullable = false)
+    private String title;
+
     @Lob
     @Column(nullable = false)
     private String content;
@@ -33,25 +37,26 @@ public class Memo implements Ownable {
     @Column(updatable = false, nullable = false)
     private LocalDateTime createDate;
 
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime modifiedDate;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(updatable = false, nullable = false)
+    private User writer;
 
+    @JsonIgnore
     @CreatedBy
     @JoinColumn(updatable = false, nullable = false)
-    private String owner;
+    private String principalName;
 
-    public boolean isModified() {
-        return createDate != modifiedDate;
-    }
-
-    public static Memo create(String content) {
+    public static Memo create(String title, User writer, String content) {
         return Memo.builder()
+                .title(title)
+                .writer(writer)
                 .content(content)
                 .build();
     }
 
-    public Memo update(String content) {
+    public Memo update(String title, String content) {
+        this.title = title;
         this.content = content;
 
         return this;

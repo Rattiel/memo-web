@@ -1,6 +1,6 @@
 package com.jongil.memo.global.config.session;
 
-import com.jongil.memo.domain.user.User;
+import com.jongil.memo.domain.user.dto.UserPrincipal;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +15,7 @@ public class SessionUser implements Serializable {
     private String username;
     private String nickname;
 
-    public static SessionUser of(User user) {
+    public static SessionUser of(UserPrincipal user) {
         return SessionUser.builder()
                     .id(user.getId())
                     .username(user.getUsername())
