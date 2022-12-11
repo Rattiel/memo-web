@@ -22,5 +22,8 @@
 > ./mvnw clean package -DskipTests <br>
 > docker-compose up --build -d 
 
+<br>
+<br>
+
 ## 접속 방법
-> http://{ip}:80
+> http://{ip}
