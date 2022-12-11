@@ -1,6 +1,5 @@
 package com.jongil.memo.global.config.session;
 
-/*
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -36,4 +35,3 @@ public class RedisConfig {
         return new LettuceConnectionFactory(configuration);
     }
 }
- */

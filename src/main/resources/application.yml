@@ -14,6 +14,9 @@ server:
   port: 8080
 
 spring:
+  session:
+    store-type: redis
+
   mvc:
     view:
       prefix: /templates/
@@ -21,6 +24,10 @@ spring:
 
   profiles:
     active: init
+
+  redis:
+    host: redis
+    port: 6379
 
   servlet:
     multipart:
@@ -30,13 +37,13 @@ spring:
   thymeleaf:
     cache: false
 
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:./test
-    username: test
-    password: 1234
 #  datasource:
-#    driver-class-name: org.mariadb.jdbc.Driver
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:./test
+#    username: test
+#    password: 1234
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
 
   devtools:
     livereload:
