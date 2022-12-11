@@ -21,3 +21,6 @@
 ## 빌드 방법(우분투 환경)
 > ./mvnw clean package -DskipTests <br>
 > docker-compose up --build -d 
+
+## 접속 방법
+> http://{ip}:80
