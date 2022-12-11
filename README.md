@@ -1,7 +1,6 @@
 ## 정보
-| | | 
-| - | - |
 | 주제 | 나만의 메모 웹 |
+| - | - |
 | jdk 버전 | 18 |
 | 프레임 워크(또는 라이브러리) |  Spring Boot, Thyemleaf, React.js, Stomp |
 | 데이터 베이스 | MariaDB |
